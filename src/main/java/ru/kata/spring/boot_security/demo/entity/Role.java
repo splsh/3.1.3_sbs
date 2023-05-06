@@ -1,12 +1,14 @@
 package ru.kata.spring.boot_security.demo.entity;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "roles")
-public class Role {
+public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,11 +20,13 @@ public class Role {
 
     @ManyToMany
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+//    @Transient
+//    @ManyToMany(mappedBy = "roles")
     private List<User> users;
 
     public Role() {
     }
-
+// конструктор для изменения объекта с id и name?
     public Role(String name) {
         this.name = name;
     }
@@ -32,6 +36,11 @@ public class Role {
             users = new ArrayList<>();
         }
         users.add(user);
+    }
+
+    @Override
+    public String getAuthority() {
+        return getName();
     }
 
     public long getId() {

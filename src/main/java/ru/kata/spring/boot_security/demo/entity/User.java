@@ -1,13 +1,17 @@
 package ru.kata.spring.boot_security.demo.entity;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,13 +30,17 @@ public class User {
     @Column(name = "days_remained")
     private int daysRemained;
 
-    @Column(name = "login")
-    private String login;
+    @Column(name = "username")
+    private String username;
     @Column(name = "password")
     private String password;
 
+    @Transient
+    private String passwordConfirm;
+
     @ManyToMany
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+//    @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
 
     public User() {
@@ -46,7 +54,7 @@ public class User {
     }
 
     public void addRolesToUser(Role role) {
-        if(roles == null) {
+        if (roles == null) {
             roles = new ArrayList<>();
         }
         roles.add(role);
@@ -100,12 +108,38 @@ public class User {
         this.roles = roles;
     }
 
-    public String getLogin() {
-        return login;
+    @Override
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
     }
 
     public String getPassword() {
@@ -114,6 +148,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
     }
 
     @Override
@@ -127,6 +169,31 @@ public class User {
                 '}';
     }
 
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//
+//        User user = (User) o;
+//
+//        if (id != user.id) return false;
+//        if (isActive != user.isActive) return false;
+//        if (daysRemained != user.daysRemained) return false;
+//        if (!firstName.equals(user.firstName)) return false;
+//        return lastName.equals(user.lastName);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        int result = (int) (id ^ (id >>> 32));
+//        result = 31 * result + firstName.hashCode();
+//        result = 31 * result + lastName.hashCode();
+//        result = 31 * result + (isActive ? 1 : 0);
+//        result = 31 * result + daysRemained;
+//        return result;
+//    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -134,20 +201,22 @@ public class User {
 
         User user = (User) o;
 
-        if (id != user.id) return false;
         if (isActive != user.isActive) return false;
         if (daysRemained != user.daysRemained) return false;
-        if (!firstName.equals(user.firstName)) return false;
-        return lastName.equals(user.lastName);
+        if (!id.equals(user.id)) return false;
+        if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
+        if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
+        return username != null ? username.equals(user.username) : user.username == null;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + firstName.hashCode();
-        result = 31 * result + lastName.hashCode();
+        int result = id.hashCode();
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (isActive ? 1 : 0);
         result = 31 * result + daysRemained;
+        result = 31 * result + (username != null ? username.hashCode() : 0);
         return result;
     }
 }
