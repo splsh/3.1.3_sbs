@@ -38,9 +38,9 @@ public class User implements UserDetails {
     @Transient
     private String passwordConfirm;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-//    @ManyToMany(fetch = FetchType.EAGER)
+//    @ManyToMany(fetch = FetchType.)
     private List<Role> roles;
 
     public User() {

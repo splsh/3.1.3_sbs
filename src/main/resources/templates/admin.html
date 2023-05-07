@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8">
+    <title>Log in with your account</title>
+    <style>
+        table, th, td {
+            border: 1px solid rgba(0, 255, 255, 55);
+        }
+    </style>
+</head>
+
+<body>
+<div>
+    <a href="/">Главная</a>
+</div>
+<div>
+    <sec:authorize access="isAuthenticated()">
+        <h4><a href="/logout">Выйти</a></h4>
+    </sec:authorize>
+</div>
+
+
+<thread>
+    <tr>All Users</tr>
+</thread>
+
+
+<div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Status</th>
+            <th>Days remaining</th>
+            <th>Operations</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user, iterStat : ${userList}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.firstName}"></td>
+            <td th:text="${user.lastName}"></td>
+            <td th:text="${user.isActive}"></td>
+            <td th:text="${user.daysRemained}"></td>
+            <td><a th:href="@{/updateUser(userId=${user.id})}">Update</a></td>
+            <td><a th:href="@{/deleteUser(userId=${user.id})}">Delete</a></td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

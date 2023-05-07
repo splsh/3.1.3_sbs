@@ -5,7 +5,12 @@
 </head>
 <body>
 <h1>User, welcome spring boot security page!</h1>
+<div>
+    <a href="/">Главная</a>
 
-
+    <sec:authorize access="isAuthenticated()">
+    <h4><a href="/logout">Выйти</a></h4>
+</sec:authorize>
+</div>
 </body>
 </html>

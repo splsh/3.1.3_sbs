@@ -1,30 +1,42 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import ru.kata.spring.boot_security.demo.configs.WebSecurityConfig;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.repo.RoleRepository;
 import ru.kata.spring.boot_security.demo.repo.UserRepository;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+@Service
 public class UserService implements UserDetailsService {
-    @Autowired
     UserRepository userRepository;
-    @Autowired
     RoleRepository roleRepository;
-    @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Autowired
+
+    @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -52,6 +64,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    //    @Transactional
     public void saveUser(User user) {
         user.setUsername(user.getFirstName().concat(user.getLastName()));
         if (userRepository.findByUsername(user.getUsername()) != null) {
@@ -59,6 +72,7 @@ public class UserService implements UserDetailsService {
         }
         // b - безопасность
         user.setPassword(bCryptPasswordEncoder.encode(("b" + new Random().nextInt(999_9999 - 100_0000) + 100_0000)));
+//        user.setPassword("b" + new Random().nextInt(999_9999 - 100_0000) + 100_0000);
         user.setRoles(Collections.singletonList(new Role("ROLE_USER")));
         userRepository.save(user);
     }
