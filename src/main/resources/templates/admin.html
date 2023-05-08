@@ -37,7 +37,9 @@
             <th>Surname</th>
             <th>Status</th>
             <th>Days remaining</th>
-            <th>Operations</th>
+            <th colspan="3">Role</th>
+            <th>Username</th>
+            <th colspan="2">Operations</th>
         </tr>
         </thead>
         <tbody>
@@ -47,12 +49,19 @@
             <td th:text="${user.lastName}"></td>
             <td th:text="${user.isActive}"></td>
             <td th:text="${user.daysRemained}"></td>
+            <td colspan="3">
+                <th:block th:each="role : ${user.roles}">
+                    <p th:text="${role.name}"></p>
+                </th:block>
+            </td>
+            <td th:text="${user.username}"></td>
             <td><a th:href="@{/updateUser(userId=${user.id})}">Update</a></td>
             <td><a th:href="@{/deleteUser(userId=${user.id})}">Delete</a></td>
         </tr>
-
         </tbody>
     </table>
+    <br>
+    <input type="button" value="Add user" onclick="window.location.href = 'addUser'">
 </div>
 </body>
 </html>

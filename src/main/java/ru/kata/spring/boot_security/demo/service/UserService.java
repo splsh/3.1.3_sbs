@@ -71,8 +71,8 @@ public class UserService implements UserDetailsService {
             return;
         }
         // b - безопасность
-        user.setPassword(bCryptPasswordEncoder.encode(("b" + new Random().nextInt(999_9999 - 100_0000) + 100_0000)));
-//        user.setPassword("b" + new Random().nextInt(999_9999 - 100_0000) + 100_0000);
+//        user.setPassword(bCryptPasswordEncoder.encode(("b" + new Random().nextInt(999_9999 - 100_0000) + 100_0000)));
+        user.setPassword(bCryptPasswordEncoder.encode("123"));
         user.setRoles(Collections.singletonList(new Role("ROLE_USER")));
         userRepository.save(user);
     }

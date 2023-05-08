@@ -30,7 +30,7 @@ public class User implements UserDetails {
     @Column(name = "days_remained")
     private int daysRemained;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
     @Column(name = "password")
     private String password;
@@ -38,7 +38,7 @@ public class User implements UserDetails {
     @Transient
     private String passwordConfirm;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 //    @ManyToMany(fetch = FetchType.)
     private List<Role> roles;
@@ -60,7 +60,7 @@ public class User implements UserDetails {
         roles.add(role);
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
