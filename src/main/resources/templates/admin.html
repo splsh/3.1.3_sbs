@@ -63,5 +63,29 @@
     <br>
     <input type="button" value="Add user" onclick="window.location.href = 'addUser'">
 </div>
+
+
+<div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="role, iterStat : ${roleList}">
+            <td th:text="${role.id}"></td>
+            <td th:text="${role.name}"></td>
+            <td><a th:href="@{/deleteRole(roleId=${role.id})}">Delete</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <input type="button" value="Add role" onclick="window.location.href = 'addRole'">
+    <input type="button" value="Create role list for users" onclick="window.location.href = 'addRole'">
+</div>
 </body>
 </html>

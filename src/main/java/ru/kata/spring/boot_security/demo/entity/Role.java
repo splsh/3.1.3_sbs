@@ -43,7 +43,7 @@ public class Role implements GrantedAuthority {
         return getName();
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

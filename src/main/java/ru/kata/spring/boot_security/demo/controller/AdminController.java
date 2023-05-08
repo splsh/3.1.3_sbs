@@ -9,21 +9,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Controller
 public class AdminController {
 
     UserService userService;
+    RoleService roleService;
 
     @Autowired
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/admin")
     public String userList(Model model) {
         model.addAttribute("userList", userService.getUserList());
+        model.addAttribute("roleList", roleService.getRoleList());
         return "admin";
     }
 
@@ -39,7 +43,7 @@ public class AdminController {
 //    }
 //
     @GetMapping("/deleteUser")
-    public String deleteUSer(@RequestParam("userId") long id) {
+    public String deleteUser(@RequestParam("userId") Long id) {
         userService.deleteUser(id);
         return "redirect:/admin";
     }
@@ -56,10 +60,22 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    @GetMapping("/addRole")
+    public String addRole(Model model) {
+        model.addAttribute("role", new Role());
+        return "role-info";
+    }
+    @GetMapping("/saveRole")
+    public String saveRole(@ModelAttribute("role") Role role) {
+        roleService.saveRole(role);
+        return "redirect:/admin";
+    }
 
-
-
-
+    @GetMapping("/deleteRole")
+    public String deleteRole(@RequestParam("roleId") Long id) {
+        roleService.deleteRole(id);
+        return "redirect:/admin";
+    }
 
 
 }

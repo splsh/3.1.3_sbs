@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML Form Example</title>
+  <style>
+    label {
+      display: inline-block;
+      width: 150px;
+      text-align: right;
+    }
+
+    input[type="text"] {
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+<h2> Role info</h2>
+
+<form action="saveRole" method="get">
+  <label for="name">Role name:</label><input type="text" name="name" id="name" th:value="${role.name}"/><br>
+
+  <input type="submit" value="Ok"/>
+</form>
+
+</body>
+</html>
