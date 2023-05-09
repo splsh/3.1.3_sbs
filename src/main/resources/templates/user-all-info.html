@@ -17,13 +17,17 @@
     </style>
 </head>
 <body>
-<h2> User info</h2>
+<h2> all user info</h2>
 
-<form action="createNewUser" method="get">
+<form action="saveChanges" method="get">
+    <input type="hidden" name="id" th:value="${user.id}"/>
+<!--    <label for="id">Id:</label><input type="text" name="id" id="id" th:value="${user.id}"/><br>-->
     <label for="firstName">Name:</label><input type="text" name="firstName" id="firstName" th:value="${user.firstName}"/><br>
     <label for="lastName">Surname:</label><input type="text" name="lastName" id="lastName" th:value="${user.lastName}"/><br>
     <label for="active">Status:</label><input type="text" name="active" id="active" th:value="${user.isActive}"/><br>
     <label for="daysRemained">Remained days:</label><input type="text" name="daysRemained" id="daysRemained" th:value="${user.daysRemained}"/><br>
+    <label for="username">Username:</label><input type="text" name="username" id="username" th:value="${user.username}"/><br>
+    <label for="password">Password:</label><input type="text" name="password" id="password" th:value="${user.password}"/><br>
 
     <input type="submit" value="Ok"/>
 </form>

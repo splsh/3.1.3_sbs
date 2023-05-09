@@ -31,17 +31,18 @@ public class AdminController {
         return "admin";
     }
 
-//    @GetMapping("/updateUser")
-//    public String updateUser(@RequestParam("userId") long id, Model model) {
-//        model.addAttribute(userService.getUserById(id));
-//        return "user-info";
-//    }
-//    @GetMapping("/saveUser")
-//    public String saveUser(@ModelAttribute("user") User user) {
-//        userService.addUser(user);
-//        return "redirect:/";
-//    }
-//
+    @GetMapping("/updateUser")
+    public String updateUser(@RequestParam("userId") long id, Model model) {
+        model.addAttribute(userService.getUserById(id));
+        return "user-all-info";
+    }
+
+    @GetMapping("/saveChanges")
+    public String saveChanges(@ModelAttribute("user") User user) {
+        userService.updateUser(user);
+        return "redirect:/admin";
+    }
+
     @GetMapping("/deleteUser")
     public String deleteUser(@RequestParam("userId") Long id) {
         userService.deleteUser(id);
@@ -54,9 +55,9 @@ public class AdminController {
         return "user-info";
     }
 
-    @GetMapping("/saveUser")
-    public String saveUser(@ModelAttribute("user") User user) {
-        userService.saveUser(user);
+    @GetMapping("/createNewUser")
+    public String createNewUser(@ModelAttribute("user") User user) {
+        userService.createNewUser(user);
         return "redirect:/admin";
     }
 
@@ -65,6 +66,7 @@ public class AdminController {
         model.addAttribute("role", new Role());
         return "role-info";
     }
+
     @GetMapping("/saveRole")
     public String saveRole(@ModelAttribute("role") Role role) {
         roleService.saveRole(role);

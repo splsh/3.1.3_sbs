@@ -14,6 +14,7 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/addUser").setViewName("user-info");
         registry.addViewController("/addRole").setViewName("role-info");
+        registry.addViewController("/updateUser").setViewName("user-all-info");
     }
 // он здесь потому что, в сервисе или секьюрити конфиге вызывало кольцо в создании банов, никакие другие решения не помогли
     @Bean

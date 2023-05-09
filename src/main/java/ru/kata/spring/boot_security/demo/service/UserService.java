@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.configs.WebSecurityConfig;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
@@ -64,15 +65,21 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    @Transactional
+    public void updateUser(User user) {
+        userRepository.setUserInfoById(user.getFirstName(), user.getLastName(), user.getIsActive(), user.getDaysRemained(), user.getUsername(), bCryptPasswordEncoder.encode(user.getPassword()), user.getId());
+    }
+
     //    @Transactional
-    public void saveUser(User user) {
-        user.setUsername(user.getFirstName().concat(user.getLastName()));
+    public void createNewUser(User user) {
+        user.setUsername(user.getFirstName().concat(user.getLastName()).concat("" + new Random().nextInt(999_99 - 100_00) * 5));
         if (userRepository.findByUsername(user.getUsername()) != null) {
             return;
         }
         // b - безопасность
 //        user.setPassword(bCryptPasswordEncoder.encode(("b" + new Random().nextInt(999_9999 - 100_0000) + 100_0000)));
-        user.setPassword(bCryptPasswordEncoder.encode("123"));
+        user.setPassword(bCryptPasswordEncoder.encode(user.getFirstName()));
+        user.addRolesToUser(roleRepository.findByName("ROLE-USER"));
 //        user.setRoles(Collections.singletonList(new Role("ROLE_USER")));
         userRepository.save(user);
     }
