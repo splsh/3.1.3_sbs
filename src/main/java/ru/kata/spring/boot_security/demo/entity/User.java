@@ -38,13 +38,14 @@ public class User implements UserDetails {
     @Transient
     private String passwordConfirm;
 
-//    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
+//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 //    @ManyToMany(fetch = FetchType.)
     private List<Role> roles;
 
     public User() {
+//        roles = new ArrayList<>();
     }
 
     public User(String firstName, String lastName, boolean isActive, int daysRemained) {
@@ -52,6 +53,7 @@ public class User implements UserDetails {
         this.lastName = lastName;
         this.isActive = isActive;
         this.daysRemained = daysRemained;
+//        roles = new ArrayList<>();
     }
 
     public void addRolesToUser(Role role) {
@@ -59,6 +61,10 @@ public class User implements UserDetails {
             roles = new ArrayList<>();
         }
         roles.add(role);
+    }
+
+    public void removesRolesFromUser(){
+        roles.clear();
     }
 
     public Long getId() {

@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kata.spring.boot_security.demo.entity.Role;
+import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.repo.RoleRepository;
 
 import java.util.List;
@@ -24,7 +25,15 @@ public class RoleService {
         roleRepository.save(role);
     }
 
-    public List<Role> getRoleList(){
+    public void addRoleByName(User user, String role) {
+      user.getRoles().add(findByName(role));
+    }
+
+    public Role findByName(String name) {
+        return roleRepository.findByName(name);
+    }
+
+    public List<Role> getRoleList() {
         return roleRepository.findAll();
     }
 

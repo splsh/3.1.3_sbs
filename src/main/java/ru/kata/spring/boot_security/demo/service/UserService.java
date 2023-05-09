@@ -18,24 +18,21 @@ import ru.kata.spring.boot_security.demo.repo.UserRepository;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
     UserRepository userRepository;
-    RoleRepository roleRepository;
+    RoleService roleService;
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserService(UserRepository userRepository, RoleService roleService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+        this.roleService = roleService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -48,6 +45,22 @@ public class UserService implements UserDetailsService {
         }
 
         return user;
+    }
+
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
+
+    public void clearUsersRolesById(Long id) {
+        User user = getUserById(id);
+        user.removesRolesFromUser();
+        saveUser(user);
+    }
+
+    public void addRoleToUser(Long id, String role) {
+        User user = getUserById(id);
+        user.getRoles().add(roleService.findByName(role));
+        saveUser(user);
     }
 
     public User getUserById(Long id) {
@@ -70,7 +83,7 @@ public class UserService implements UserDetailsService {
         userRepository.setUserInfoById(user.getFirstName(), user.getLastName(), user.getIsActive(), user.getDaysRemained(), user.getUsername(), bCryptPasswordEncoder.encode(user.getPassword()), user.getId());
     }
 
-    //    @Transactional
+    @Transactional
     public void createNewUser(User user) {
         user.setUsername(user.getFirstName().concat(user.getLastName()).concat("" + new Random().nextInt(999_99 - 100_00) * 5));
         if (userRepository.findByUsername(user.getUsername()) != null) {
@@ -79,7 +92,7 @@ public class UserService implements UserDetailsService {
         // b - безопасность
 //        user.setPassword(bCryptPasswordEncoder.encode(("b" + new Random().nextInt(999_9999 - 100_0000) + 100_0000)));
         user.setPassword(bCryptPasswordEncoder.encode(user.getFirstName()));
-        user.addRolesToUser(roleRepository.findByName("ROLE-USER"));
+        user.addRolesToUser(roleService.findByName("ROLE_USER"));
 //        user.setRoles(Collections.singletonList(new Role("ROLE_USER")));
         userRepository.save(user);
     }

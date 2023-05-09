@@ -18,8 +18,8 @@ public class Role implements GrantedAuthority {
     @Column(name = "name")
     private String name;
 
-//    @ManyToMany (cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
-    @ManyToMany (cascade = CascadeType.ALL)
+    @ManyToMany (cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
+//    @ManyToMany (cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 //    @Transient
 //    @ManyToMany(mappedBy = "roles")

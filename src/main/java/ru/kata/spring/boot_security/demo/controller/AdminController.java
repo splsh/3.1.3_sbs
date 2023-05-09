@@ -12,6 +12,8 @@ import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.util.ArrayList;
+
 @Controller
 public class AdminController {
 
@@ -38,8 +40,9 @@ public class AdminController {
     }
 
     @GetMapping("/saveChanges")
-    public String saveChanges(@ModelAttribute("user") User user) {
+    public String saveChanges(@ModelAttribute("user") User user, @RequestParam("role") String role) {
         userService.updateUser(user);
+        userService.addRoleToUser(user.getId(), role);
         return "redirect:/admin";
     }
 
@@ -76,6 +79,12 @@ public class AdminController {
     @GetMapping("/deleteRole")
     public String deleteRole(@RequestParam("roleId") Long id) {
         roleService.deleteRole(id);
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/clearUserRoles")
+    public String clearUserRoles(@RequestParam("userId") Long id) {
+        userService.clearUsersRolesById(id);
         return "redirect:/admin";
     }
 
