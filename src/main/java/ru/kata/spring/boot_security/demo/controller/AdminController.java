@@ -34,7 +34,7 @@ public class AdminController {
     }
 
     @GetMapping("/updateUser")
-    public String updateUser(@RequestParam("userId") long id, Model model) {
+    public String updateUser(@RequestParam("userId") Long id, Model model) {
         model.addAttribute(userService.getUserById(id));
         return "user-all-info";
     }

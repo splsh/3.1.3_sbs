@@ -13,7 +13,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByLastName(String lastName);
 
+
     @Modifying
     @Query("update User u set u.firstName = ?1, u.lastName = ?2, u.isActive=?3, u.daysRemained=?4, u.username=?5, u.password=?6 where u.id = ?7")
     void setUserInfoById(String firstname, String lastname, boolean isActive, int days, String username, String password, Long userId);
+
 }
