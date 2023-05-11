@@ -51,10 +51,9 @@ public class UserService implements UserDetailsService {
 //
 //        return user;
 //    }
-    @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.loadUserWithRoles(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
