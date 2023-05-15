@@ -23,7 +23,6 @@ public class UserController {
     @GetMapping("/user")
     public String getUserInfo(Model model, Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//        model.addAttribute("user", userService.loadUserByUsername(userDetails.getUsername()));
         model.addAttribute("user", userService.getUserByUsername(userDetails.getUsername()));
         return "user";
     }

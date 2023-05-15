@@ -51,7 +51,7 @@ public class UserService implements UserDetailsService {
 //
 //        return user;
 //    }
-    @Override
+     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.loadUserWithRoles(username);
         if (user == null) {
