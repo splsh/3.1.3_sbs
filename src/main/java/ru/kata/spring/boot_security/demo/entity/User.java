@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -18,20 +19,16 @@ public class User implements UserDetails {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "first_name")
+    @Column(name = "firstName")
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "lastName")
     private String lastName;
 
-    @Column(name = "is_active")
-    private boolean isActive;
-
-    @Column(name = "days_remained")
-    private int daysRemained;
-
-    @Column(name = "username", unique = true)
-    private String username;
+    @Column(name = "age")
+    private int age;
+    @Column(name = "email", unique = true)
+    private String email;
     @Column(name = "password")
     private String password;
 
@@ -40,7 +37,7 @@ public class User implements UserDetails {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
 //    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 //    @ManyToMany(fetch = FetchType.)
     private List<Role> roles;
 
@@ -48,12 +45,20 @@ public class User implements UserDetails {
 //        roles = new ArrayList<>();
     }
 
-    public User(String firstName, String lastName, boolean isActive, int daysRemained) {
+    public User(String firstName, String lastName, int age) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.isActive = isActive;
-        this.daysRemained = daysRemained;
+        this.age = age;
 //        roles = new ArrayList<>();
+    }
+
+    public User(Long id, String firstName, String lastName, int age, String email, String password) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
+        this.password = password;
     }
 
     public void addRolesToUser(Role role) {
@@ -91,20 +96,20 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
-    public boolean getIsActive() {
-        return isActive;
+    public int getAge() {
+        return age;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setAge(int age) {
+        this.age = age;
     }
 
-    public int getDaysRemained() {
-        return daysRemained;
+    public String getEmail() {
+        return email;
     }
 
-    public void setDaysRemained(int daysRemained) {
-        this.daysRemained = daysRemained;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<Role> getRoles() {
@@ -117,7 +122,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override
@@ -138,10 +143,6 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     @Override
@@ -165,41 +166,25 @@ public class User implements UserDetails {
         this.passwordConfirm = passwordConfirm;
     }
 
+    public String getAllRoles() {
+        List<Role> roles = this.roles;
+        StringBuilder allRoles = new StringBuilder();
+        for (Role role : roles) {
+            allRoles.append(role.getRoleName().replaceFirst("ROLE_", "")).append(" ");
+        }
+        return allRoles.toString();
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", isActive=" + isActive +
-                ", daysRemained=" + daysRemained +
+                ", age=" + age +
+                ", email='" + email + '\'' +
                 '}';
     }
-
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//
-//        User user = (User) o;
-//
-//        if (id != user.id) return false;
-//        if (isActive != user.isActive) return false;
-//        if (daysRemained != user.daysRemained) return false;
-//        if (!firstName.equals(user.firstName)) return false;
-//        return lastName.equals(user.lastName);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        int result = (int) (id ^ (id >>> 32));
-//        result = 31 * result + firstName.hashCode();
-//        result = 31 * result + lastName.hashCode();
-//        result = 31 * result + (isActive ? 1 : 0);
-//        result = 31 * result + daysRemained;
-//        return result;
-//    }
-
 
     @Override
     public boolean equals(Object o) {
@@ -208,12 +193,11 @@ public class User implements UserDetails {
 
         User user = (User) o;
 
-        if (isActive != user.isActive) return false;
-        if (daysRemained != user.daysRemained) return false;
+        if (age != user.age) return false;
         if (!id.equals(user.id)) return false;
         if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
         if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
-        return username != null ? username.equals(user.username) : user.username == null;
+        return email.equals(user.email);
     }
 
     @Override
@@ -221,9 +205,8 @@ public class User implements UserDetails {
         int result = id.hashCode();
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-        result = 31 * result + (isActive ? 1 : 0);
-        result = 31 * result + daysRemained;
-        result = 31 * result + (username != null ? username.hashCode() : 0);
+        result = 31 * result + age;
+        result = 31 * result + email.hashCode();
         return result;
     }
 }

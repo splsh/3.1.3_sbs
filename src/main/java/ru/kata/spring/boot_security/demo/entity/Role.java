@@ -16,20 +16,18 @@ public class Role implements GrantedAuthority {
     private Long id;
 
     @Column(name = "name")
-    private String name;
+    private String roleName;
 
     @ManyToMany (cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
-//    @ManyToMany (cascade = CascadeType.ALL)
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-//    @Transient
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 //    @ManyToMany(mappedBy = "roles")
     private List<User> users;
 
     public Role() {
     }
 // конструктор для изменения объекта с id и name?
-    public Role(String name) {
-        this.name = name;
+    public Role(String roleName) {
+        this.roleName = roleName;
     }
 
     public void addUserToRoles(User user) {
@@ -41,7 +39,7 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return getName();
+        return getRoleName();
     }
 
     public Long getId() {
@@ -60,19 +58,19 @@ public class Role implements GrantedAuthority {
         this.users = users;
     }
 
-    public String getName() {
-        return name;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
     @Override
     public String toString() {
         return "Role{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", name='" + roleName + '\'' +
                 '}';
     }
 
@@ -83,11 +81,14 @@ public class Role implements GrantedAuthority {
 
         Role role = (Role) o;
 
-        return name != null ? name.equals(role.name) : role.name == null;
+        if (!id.equals(role.id)) return false;
+        return roleName.equals(role.roleName);
     }
 
     @Override
     public int hashCode() {
-        return name != null ? name.hashCode() : 0;
+        int result = id.hashCode();
+        result = 31 * result + roleName.hashCode();
+        return result;
     }
 }
