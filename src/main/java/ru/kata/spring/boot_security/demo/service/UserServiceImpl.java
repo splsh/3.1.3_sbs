@@ -85,6 +85,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findAll();
     }
 
+    @Override
+    public List<User> findAllWithRoles() {
+        return userRepository.loadAllUsersWithRoles();
+    }
+
+    @Override
+    public User getUserWithRolesById(Long id) {
+        return userRepository.loadUserWithRolesById(id);
+    }
+
     @Transactional
     public void deleteUserById(Long id) {
         if (userRepository.findById(id).isPresent()) {
@@ -105,13 +115,19 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userRepository.save(user);
     }
 
+    public User findByName(String username) {
+        return userRepository.findByEmail(username);
+    }
+
+
+
 //    @Transactional()
 //    public void updateUser(User user) {
 ////        // Если использовать save/merge/merge + flush/merge + clear при добавлении роли, в лучшем случае он добавляет одну роль, удаляя все старые. В худшем выкидывает ошибки. Не вижу смысла переделывать.
 ////        Настройки транзакции тоже менял. Без new теперь тоже нельзя из-за того, что в этом классе нельзя никак сделать autowiring BCryptPasswordEncoder
 //        userRepository.setUserInfoById(user.getFirstName(), user.getLastName(), user.getIsActive(), user.getDaysRemained(), user.getUsername(), new BCryptPasswordEncoder().encode(user.getPassword()), user.getId());
-//    }
 
+//    }
 
 //    @Transactional
 //    public void createNewUser(User user) {
@@ -125,11 +141,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 //        user.addRolesToUser(roleServiceImpl.findByName("ROLE_USER"));
 ////        user.setRoles(Collections.singletonList(new Role("ROLE_USER")));
 //        userRepository.save(user);
-//    }
 
-    public User findByName(String username) {
-        return userRepository.findByEmail(username);
-    }
+//    }
 
 
 }

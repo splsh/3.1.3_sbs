@@ -7,13 +7,21 @@ import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.entity.User;
 
 import java.lang.annotation.Native;
+import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByEmail(String username);
+
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email = ?1")
     User loadUserWithRoles(String username);
+
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles")
+    List<User> loadAllUsersWithRoles();
+
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.id = ?1")
+    User loadUserWithRolesById(Long id);
 
     User findByLastName(String lastName);
 

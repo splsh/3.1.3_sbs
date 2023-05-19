@@ -8,11 +8,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+//implements WebMvcConfigurer
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
     private final SuccessUserHandler successUserHandler;
 
     private UserServiceImpl userServiceImpl;
@@ -37,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .and()
 //                .logout()
 //                .permitAll();
-        http.authorizeRequests()
+        http.csrf().disable().authorizeRequests()
                 .antMatchers("/", "index").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/user").authenticated()
@@ -47,8 +50,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().logout().logoutSuccessUrl("/login").permitAll();
     }
 
-//.loginPage("/login")
-
+    //.loginPage("/login")   csrf().disable().
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**")
+//                .allowedOrigins("/**")
+//                .allowedMethods("*");
+//    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

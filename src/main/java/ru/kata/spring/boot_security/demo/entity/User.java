@@ -52,6 +52,15 @@ public class User implements UserDetails {
 //        roles = new ArrayList<>();
     }
 
+    public User(String firstName, String lastName, int age, String email, String password, List<Role> roles) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
+
     public User(Long id, String firstName, String lastName, int age, String email, String password) {
         this.id = id;
         this.firstName = firstName;
@@ -120,6 +129,7 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    //это метод для user details
     @Override
     public String getUsername() {
         return email;
