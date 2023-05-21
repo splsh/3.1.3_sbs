@@ -1,6 +1,8 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.dto.UserCreationDTO;
 import ru.kata.spring.boot_security.demo.dto.UserDTO;
@@ -15,7 +17,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin/users")
 //@CrossOrigin(origins = "http://localhost:56814/") не работает
 public class AdminRestController {
 
@@ -30,47 +32,90 @@ public class AdminRestController {
         this.mapper = mapper;
     }
 
-    @GetMapping("/users")
-    @ResponseBody
-    public List<UserDTO> getUsers() {
-        return userService.findAll()
+//    @GetMapping
+//    public ResponseEntity<List<User>> getAllUsers() {
+//        List<User> users = userService.findAll();
+//        return ResponseEntity.ok(users);
+//    }
+
+//    @GetMapping("")
+//    @ResponseBody
+//    public List<UserDTO> getAllUsers() {
+//        return userService.findAll()
+//                .stream()
+//                .map(mapper::toDto)
+//                .collect(toList());
+//    }
+
+    @GetMapping("")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<UserDTO> users = userService.findAll()
                 .stream()
                 .map(mapper::toDto)
                 .collect(toList());
+        return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/users/{id}")
-    @ResponseBody
-    public UserDTO getUser(@PathVariable("id") Long id) {
-        UserDTO user = mapper.toDto(userService.getUserById(id));
-        return user;
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
     }
 
-    //    @CrossOrigin()
-    @DeleteMapping("/users/{id}")
-    public void deleteUser(@PathVariable("id") Long id) {
-        userService.deleteUserById(id);
-    }
+//    @GetMapping("/{id}")
+//    @ResponseBody
+//    public UserDTO getUser(@PathVariable("id") Long id) {
+//        UserDTO user = mapper.toDto(userService.getUserById(id));
+//        return user;
+//    }
 
-    @PostMapping("/users")
-    @ResponseBody
-    public UserDTO create(@RequestBody UserCreationDTO userDTO) {
-        User user = mapper.toUser(userDTO);
-        for (String role : userDTO.getRoles()) {
-            user.addRolesToUser(roleService.findByName(role));
-        }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
+//        UserDTO user = mapper.toDto(userService.getUserById(id));
+//        return ResponseEntity.ok(user);
+//    }
+    @PostMapping
+    public ResponseEntity<User> addNewUser(@RequestBody User user) {
+        userService.saveUser(user);
+        return ResponseEntity.ok(user);
+    }
+//    @PostMapping("/users")
+//    @ResponseBody
+//    public UserDTO addNewUser(@RequestBody UserCreationDTO userDTO) {
+//        User user = mapper.toUser(userDTO);
+//        for (String role : userDTO.getRoles()) {
+//            user.addRolesToUser(roleService.findByName(role));
+//        }
 //        userDTO.getRoles()
 //                .stream()
 //                .map(role -> roleService.(role))
 //                .forEach(user::addRolesToUser);
-        userService.saveUser(user);
-        return mapper.toDto(userService.findByName(user.getUsername()));
+//        userService.saveUser(user);
+//        return mapper.toDto(userService.findByName(user.getUsername()));
+//    }
+
+    @PatchMapping
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
+        userService.updateUser(user);
+        return ResponseEntity.ok(user);
+    }
+//    @PutMapping("/users")
+//    @ResponseBody
+//    public UserDTO updateUser(@RequestBody User user) {
+//        userService.updateUser(user);
+//        return mapper.toDto(userService.getUserById(user.getId()));
+//    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable Long id) {
+        userService.deleteUserById(id);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/users")
-    @ResponseBody
-    public UserDTO updateUser(@RequestBody User user) {
-        userService.updateUser(user);
-        return mapper.toDto(userService.getUserById(user.getId()));
-    }
+    //    @CrossOrigin() не работает
+//    @DeleteMapping("/{id}")
+//    public void deleteUser(@PathVariable("id") Long id) {
+//        userService.deleteUserById(id);
+//    }
+
 }

@@ -40,15 +40,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
 //                .and()
 //                .logout()
 //                .permitAll();
-        http.csrf().disable().authorizeRequests()
-                .antMatchers("/", "index").permitAll()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/user").authenticated()
+//        http.csrf().disable().authorizeRequests()
+//                .antMatchers("/", "index").permitAll()
+//                .antMatchers("/admin").hasRole("ADMIN")
+//                .antMatchers("/user").authenticated()
+//                .anyRequest().authenticated()
+//                .and().formLogin().successHandler(successUserHandler)
+//                .permitAll()
+//                .and().logout().logoutSuccessUrl("/login").permitAll();
+//    }
+            http
+                    .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/api/**").hasRole("ADMIN")
+                .antMatchers("/user").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/", "/index").permitAll()
                 .anyRequest().authenticated()
-                .and().formLogin().successHandler(successUserHandler)
+                .and()
+                .formLogin().successHandler(successUserHandler)
                 .permitAll()
-                .and().logout().logoutSuccessUrl("/login").permitAll();
-    }
+                .and()
+                .logout()
+                .logoutSuccessUrl("/login")
+                .permitAll();
+}
 
     //.loginPage("/login")   csrf().disable().
 //    @Override

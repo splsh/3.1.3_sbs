@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
@@ -25,35 +26,41 @@ public class AdminController {
         this.userServiceImpl = userServiceImpl;
         this.roleServiceImpl = roleServiceImpl;
     }
-
     @GetMapping
-    public String getAdminPage(Model model, Principal principal) {
-        model.addAttribute("admin", userServiceImpl.findByName(principal.getName()));
-        model.addAttribute("user", new User());
-
-        model.addAttribute("users", userServiceImpl.findAll());
-        model.addAttribute("roles", roleServiceImpl.getAllRoles());
-
-        return "admin";
+    public ModelAndView adminPage() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin");
+        return modelAndView;
     }
 
-    @PostMapping("/editUser/{id}")
-    public String saveUpdateUser(@ModelAttribute("user") User user, @PathVariable("id") Long id) {
-        userServiceImpl.updateUser(user);
-        return "redirect:/admin";
-    }
-
-    @PostMapping("/add")
-    public String createUser(@ModelAttribute("user") User user) {
-        userServiceImpl.saveUser(user);
-        return "redirect:/admin";
-    }
-
-    @GetMapping("/deleteUser/{id}")
-    public String deleteUser(@PathVariable Long id) {
-        userServiceImpl.deleteUserById(id);
-        return "redirect:/admin";
-    }
+//    @GetMapping
+//    public String getAdminPage(Model model, Principal principal) {
+//        model.addAttribute("admin", userServiceImpl.findByName(principal.getName()));
+//        model.addAttribute("user", new User());
+//
+//        model.addAttribute("users", userServiceImpl.findAll());
+//        model.addAttribute("roles", roleServiceImpl.getAllRoles());
+//
+//        return "admin";
+//    }
+//
+//    @PostMapping("/editUser/{id}")
+//    public String saveUpdateUser(@ModelAttribute("user") User user, @PathVariable("id") Long id) {
+//        userServiceImpl.updateUser(user);
+//        return "redirect:/admin";
+//    }
+//
+//    @PostMapping("/add")
+//    public String createUser(@ModelAttribute("user") User user) {
+//        userServiceImpl.saveUser(user);
+//        return "redirect:/admin";
+//    }
+//
+//    @GetMapping("/deleteUser/{id}")
+//    public String deleteUser(@PathVariable Long id) {
+//        userServiceImpl.deleteUserById(id);
+//        return "redirect:/admin";
+//    }
 
 //    @GetMapping("/admin")
 //    public String userList(Model model, Authentication authentication) {
