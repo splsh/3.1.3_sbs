@@ -56,11 +56,11 @@ public class AdminRestController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
-        User user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<User> getUser(@PathVariable Long id) {
+//        User user = userService.getUserById(id);
+//        return ResponseEntity.ok(user);
+//    }
 
 //    @GetMapping("/{id}")
 //    @ResponseBody
@@ -69,11 +69,11 @@ public class AdminRestController {
 //        return user;
 //    }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
-//        UserDTO user = mapper.toDto(userService.getUserById(id));
-//        return ResponseEntity.ok(user);
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
+        UserDTO user = mapper.toDto(userService.getUserById(id));
+        return ResponseEntity.ok(user);
+    }
     @PostMapping
     public ResponseEntity<User> addNewUser(@RequestBody User user) {
         userService.saveUser(user);

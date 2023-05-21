@@ -15,7 +15,7 @@ import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 @Configuration
 @EnableWebSecurity
 //implements WebMvcConfigurer
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SuccessUserHandler successUserHandler;
 
     private UserServiceImpl userServiceImpl;
@@ -49,11 +49,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
 //                .permitAll()
 //                .and().logout().logoutSuccessUrl("/login").permitAll();
 //    }
-            http
-                    .csrf().disable()
+        http
+                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/**").hasRole("ADMIN")
+                .antMatchers("/api/admin").hasRole("ADMIN")
+                .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/user").hasAnyRole("USER", "ADMIN")
+                .antMatchers("api/user").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/", "/index").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -63,7 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
                 .logout()
                 .logoutSuccessUrl("/login")
                 .permitAll();
-}
+    }
 
     //.loginPage("/login")   csrf().disable().
 //    @Override
