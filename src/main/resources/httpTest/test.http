@@ -1,0 +1,10 @@
+GET localhost:8080/api/admin/users/
+Cookie: JSESSIONID=06EAFDDF1C8167BF40B79984B6B3F8D0;
+
+{%
+    client.global.set("my_cookie", "06EAFDDF1C8167BF40B79984B6B3F8D0");
+%}
+
+###
+GET localhost:8080/api/admin/users/11
+Cookie: JSESSIONID={{my_cookie}};

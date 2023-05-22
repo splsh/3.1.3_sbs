@@ -1,0 +1,36 @@
+GET http://94.198.50.185:7081/api/users
+Content-Type: application/json
+
+#{   не работает, не понял почему
+#  %
+#client.global.set("my_cookie", response.headers.valuesOf("Set-Cookie")[0]);
+#%
+#}
+
+###
+POST http://94.198.50.185:7081/api/users
+Content-Type: application/json
+#Cookie: {{my_cookie}};
+
+
+{
+"id": 3,
+"name" : "James",
+"lastName": "Brown",
+"age": 0
+}
+###
+PUT http://94.198.50.185:7081/api/users/
+Content-Type: application/json
+#Cookie: {{my_cookie}};
+
+{
+"id": 3,
+"name" : "Thomas",
+"lastName": "Shelby",
+"age": 0
+}
+###
+DELETE http://94.198.50.185:7081/api/users/3
+Content-Type: application/json
+#Cookie: {{my_cookie}};
